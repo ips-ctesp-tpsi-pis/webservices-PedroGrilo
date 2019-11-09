@@ -8,7 +8,6 @@ import socket
 import app
 import httputils
 
-
 # Define socket host and port
 SERVER_HOST = '0.0.0.0'
 SERVER_PORT = 8000

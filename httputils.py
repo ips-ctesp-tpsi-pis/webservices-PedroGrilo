@@ -13,29 +13,32 @@ def parse_http_request(request):
     """
 
     # Get the headers and body lines
-    lines = request.splitlines()
-    last_header = lines.index('')
-    headers = lines[:last_header]
-    body = lines[last_header:]
 
-    req = {}
+    try:
+        lines = request.splitlines()
+        last_header = lines.index('')
+        headers = lines[:last_header]
+        body = lines[last_header:]
+        req = {}
+        # Parse method and url
+        head = headers[0].split()
+        req['method'] = head[0]
+        req['url'] = head[1]
+        req['version'] = head[2]
 
-    # Parse method and url
-    head = headers[0].split()
-    req['method'] = head[0]
-    req['url'] = head[1]
-    req['version'] = head[2]
+        # Parse headers
+        req['headers'] = {}
+        for header in headers[1:]:
+            key, value = header.split(':', 1)
+            req['headers'][key] = value.strip()
 
-    # Parse headers
-    req['headers'] = {}
-    for header in headers[1:]:
-        key, value = header.split(':', 1)
-        req['headers'][key] = value.strip()
-
-    # Parse body
-    req['body'] = "\n".join(body).strip()
-
-    return req
+        # Parse body
+        req['body'] = "\n".join(body).strip()
+        return req
+    except:
+        return {
+            "method": "REQUEST FAILED"
+        }
 
 
 def parse_http_response(response):

@@ -67,8 +67,9 @@ def deleteUser(request):
                 del USERS[i]
                 break
         return httpOk("Deleted")
-    except:
-        return httpFail("Error")
+    except Exception as e:
+        error = "Error : " + str(e)
+        return httpFail(error)
 
 
 def updateUser(request):
@@ -85,13 +86,21 @@ def updateUser(request):
         return httpFail(error)
 
 
+def addUser(request):
+    try:
+        USERS.append((json.loads(request['body'])))
+        return httpFail("User added successfully")
+    except Exception as e:
+        error = "Error : " + str(e)
+        return httpFail(error)
+
+
 def controller(request):
     print(request)
     if request["method"] == "GET":
         return parse_request(request)
     elif request["method"] == "POST":
-        USERS.append((json.loads(request['body'])))
-        return httpFail("User added successfully")
+        return addUser(request)
     elif request["method"] == "DELETE":
         return deleteUser(request)
     elif request["method"] == "PUT":
